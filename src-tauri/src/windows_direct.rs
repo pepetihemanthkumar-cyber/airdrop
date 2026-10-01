@@ -115,7 +115,7 @@ mod winrt_impl {
         WiFiDirectAdvertisement, WiFiDirectAdvertisementPublisher,
         WiFiDirectAdvertisementPublisherStatus, WiFiDirectAdvertisementPublisherStatusChangedEventArgs,
         WiFiDirectConnectionListener, WiFiDirectConnectionRequestedEventArgs,
-        WiFiDirectDevice, WiFiDirectDeviceSelectorConfigurationMethod,
+        WiFiDirectDevice,
     };
     use windows::Devices::Enumeration::{DeviceInformation, DeviceWatcher, DeviceInformationUpdate};
     use windows::Networking::Sockets::{
@@ -292,7 +292,7 @@ mod winrt_impl {
         }
 
         pub fn start_discovery(&mut self, app: &AppHandle, service_name: &str) -> WinResult<()> {
-            let selector = WiFiDirectDevice::GetDeviceSelector(WiFiDirectDeviceSelectorConfigurationMethod::Default)?;
+            let selector = WiFiDirectDevice::GetDeviceSelector()?;
             let watcher = DeviceInformation::CreateWatcherAqsFilter(&selector)?;
 
             let app_added = app.clone();
