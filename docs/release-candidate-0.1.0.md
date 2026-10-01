@@ -3,6 +3,8 @@
 > **Product**: NearShare  
 > **Release Candidate**: `0.1.0-rc1` (Version `0.1.0`)  
 > **Freeze Date**: 2026-10-01  
+> **Source Control Baseline**: `d3f988bebd2e031380258bef8a68218f629687ec`  
+> **Release Tag**: `v0.1.0-rc1`  
 > **Host Architecture**: macOS (Darwin arm64, Apple Silicon)  
 > **Target Channel**: Stable Release Candidate
 
