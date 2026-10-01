@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "test": "npx tsx -e \"import { runTauriBridgeTestSuite } from './src/core/native/tauri/tauriBridgeTest'; runTauriBridgeTestSuite().then(res => { console.log('TOTAL:', res.total, 'PASSED:', res.passed, 'FAILED:', res.failed, 'DURATION:', res.durationMs + 'ms'); if (res.failed > 0) { console.error('FAILED TESTS:', res.tests.filter(t => !t.passed)); process.exit(1); } })\"",
+    "test": "npx tsx -e \"import { runTauriBridgeTestSuite } from './src/core/native/tauri/tauriBridgeTest'; runTauriBridgeTestSuite().then(res => { console.log('TOTAL:', res.total, 'PASSED:', res.passed, 'FAILED:', res.failed, 'DURATION:', res.durationMs + 'ms'); if (res.failed > 0) { console.error('FAILED TESTS:', res.tests.filter(t => !t.passed)); process.exit(1); } else { process.exit(0); } })\"",
     "lint": "oxlint",
     "validate:version": "npx tsx scripts/validate-version.ts",
     "check:secrets": "npx tsx scripts/check-secrets.ts",
