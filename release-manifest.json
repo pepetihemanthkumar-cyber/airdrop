@@ -1,0 +1,17 @@
+{
+  "product": "NearShare",
+  "version": "0.1.0",
+  "channel": "stable",
+  "gitCommit": "local-build",
+  "generatedAt": "2026-10-01T08:52:44.068Z",
+  "artifacts": [
+    {
+      "platform": "macos",
+      "architecture": "arm64",
+      "filename": "NearShare_0.1.0_aarch64.dmg",
+      "relativePath": "dmg/NearShare_0.1.0_aarch64.dmg",
+      "sha256": "4acdad7e9d4bf3e65690da180759a101779447d7ce10c9daa24ba5d33b3c3da9",
+      "sizeBytes": 3950543
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+name: NearShare CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-and-test:
+    name: Test & Validate (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-14, windows-latest]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Verify Version Synchronization
+        run: npm run validate:version
+
+      - name: Scan for Accidental Secrets
+        run: npm run check:secrets
+
+      - name: Run Deterministic Test Suite
+        run: npm test
+
+      - name: Run ESLint / Oxlint
+        run: npm run lint
+
+      - name: Run Frontend Production Build
+        run: npm run build
+
+      - name: Setup Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust Cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: 'src-tauri -> src-tauri/target'
+
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli --version ^2.0 --locked || true
+        shell: bash
+
+      - name: Check Rust Backend (src-tauri)
+        run: cargo check --manifest-path src-tauri/Cargo.toml
+
+      - name: Test Rust Backend (src-tauri)
+        run: cargo test --manifest-path src-tauri/Cargo.toml

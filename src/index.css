@@ -1,0 +1,258 @@
+@import "tailwindcss";
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+    background-color: #08090B;
+    color: #F5F5F5;
+    overflow-x: hidden;
+    scrollbar-gutter: stable;
+  }
+  
+  #root {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #08090B;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ========================================================================= */
+/* MONOCHROMATIC SMOKED LIQUID GLASS DESIGN SYSTEM (Apple-Inspired / Minimal) */
+/* ========================================================================= */
+
+/* Smoked Glass Vessel - The Primary Central Object */
+.smoked-glass-hero {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.045) 0%,
+    rgba(255, 255, 255, 0.015) 100%
+  );
+  backdrop-filter: blur(28px) saturate(140%);
+  -webkit-backdrop-filter: blur(28px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 
+    0 32px 64px -16px rgba(0, 0, 0, 0.9),
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.5);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.smoked-glass-hero:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 
+    0 40px 80px -16px rgba(0, 0, 0, 0.95),
+    inset 0 1px 2px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* Smoked Glass Card */
+.smoked-glass-card {
+  background: rgba(255, 255, 255, 0.035);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 
+    0 20px 40px -12px rgba(0, 0, 0, 0.75),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.12);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.smoked-glass-card:hover {
+  background: rgba(255, 255, 255, 0.055);
+  border-color: rgba(255, 255, 255, 0.20);
+}
+
+/* Floating Glass Pill Navigation & Controls */
+.smoked-glass-pill {
+  background: rgba(255, 255, 255, 0.035);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 
+    0 16px 32px -8px rgba(0, 0, 0, 0.65),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.15);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.smoked-glass-pill:hover {
+  background: rgba(255, 255, 255, 0.055);
+  border-color: rgba(255, 255, 255, 0.20);
+}
+
+/* Smoked Droplet / Bubble Object */
+.smoked-droplet {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.01) 100%
+  );
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 
+    0 16px 32px rgba(0, 0, 0, 0.6),
+    inset 0 2px 4px rgba(255, 255, 255, 0.25),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Primary Button: Solid Soft White with dark graphite text */
+.smoked-btn-primary {
+  background: #F5F5F5;
+  color: #08090B;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 
+    0 4px 16px rgba(255, 255, 255, 0.15),
+    inset 0 1px 0 #FFFFFF;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.smoked-btn-primary:hover {
+  background: #FFFFFF;
+  transform: translateY(-1px);
+  box-shadow: 
+    0 8px 24px rgba(255, 255, 255, 0.25),
+    inset 0 1px 0 #FFFFFF;
+}
+
+/* Secondary Button: Smoked Glass */
+.smoked-btn-secondary {
+  background: rgba(255, 255, 255, 0.045);
+  color: #F5F5F5;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 
+    0 4px 14px rgba(0, 0, 0, 0.4),
+    inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.smoked-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.075);
+  border-color: rgba(255, 255, 255, 0.20);
+  transform: translateY(-1px);
+}
+
+/* Subtle 3D Droplet Floating Keyframe (translateY ±8px, 3s loop) */
+@keyframes droplet-float-1 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(3deg);
+  }
+}
+
+@keyframes droplet-float-2 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(8px) rotate(-3deg);
+  }
+}
+
+@keyframes subtle-shimmer {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.animate-droplet-1 {
+  animation: droplet-float-1 3.2s ease-in-out infinite;
+}
+
+.animate-droplet-2 {
+  animation: droplet-float-2 3.8s ease-in-out infinite;
+}
+
+.animate-droplet-3 {
+  animation: droplet-float-1 4.2s ease-in-out infinite 0.5s;
+}
+
+.animate-shine {
+  animation: subtle-shimmer 3s ease-in-out infinite;
+}
+
+/* Liquid Glass Vessel Float Motion */
+@keyframes vessel-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-3.5px);
+  }
+}
+
+@keyframes reflection-sweep {
+  0% {
+    transform: translateX(-150%) skewX(-20deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.15;
+  }
+  50% {
+    transform: translateX(150%) skewX(-20deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(150%) skewX(-20deg);
+    opacity: 0;
+  }
+}
+
+.animate-vessel-float {
+  animation: vessel-float 5.5s ease-in-out infinite;
+}
+
+.animate-reflection-sweep {
+  animation: reflection-sweep 6.5s ease-in-out infinite;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+

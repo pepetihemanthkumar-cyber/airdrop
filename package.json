@@ -1,0 +1,40 @@
+{
+  "name": "syntra",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "test": "npx tsx -e \"import { runTauriBridgeTestSuite } from './src/core/native/tauri/tauriBridgeTest'; runTauriBridgeTestSuite().then(res => { console.log('TOTAL:', res.total, 'PASSED:', res.passed, 'FAILED:', res.failed, 'DURATION:', res.durationMs + 'ms'); if (res.failed > 0) { console.error('FAILED TESTS:', res.tests.filter(t => !t.passed)); process.exit(1); } })\"",
+    "lint": "oxlint",
+    "validate:version": "npx tsx scripts/validate-version.ts",
+    "check:secrets": "npx tsx scripts/check-secrets.ts",
+    "manifest:generate": "node scripts/generate-release-manifest.mjs",
+    "manifest:verify": "node scripts/verify-release-manifest.mjs",
+    "preview": "vite preview",
+    "tauri:dev": "cargo tauri dev",
+    "tauri:build": "cargo tauri build"
+  },
+  "dependencies": {
+    "@types/canvas-confetti": "^1.9.0",
+    "canvas-confetti": "^1.9.4",
+    "clsx": "^2.1.1",
+    "framer-motion": "^13.4.1",
+    "lucide-react": "^1.47.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "tailwind-merge": "^3.7.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "oxlint": "^1.81.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.0"
+  }
+}

@@ -1,0 +1,403 @@
+/**
+ * NearShare Cross-Platform Interoperability Matrix
+ *
+ * Defines the complete cross-platform pairing matrix across all four platforms
+ * (macOS, Windows, Android, iOS) for both Direct (off-grid) and Local Network (Wi-Fi/LAN) modes.
+ */
+
+import type {
+  InteroperabilityMatrixEntry,
+  DirectRadioCompatibility,
+  PlatformType,
+  ConnectionMode,
+} from './InteroperabilityTypes';
+
+export const CROSS_PLATFORM_INTEROPERABILITY_ENTRIES: InteroperabilityMatrixEntry[] = [
+  // 1. macOS <-> macOS
+  {
+    pairId: 'INTEROP-MAC-MAC-DIRECT',
+    platformA: 'macOS',
+    platformB: 'macOS',
+    mode: 'direct',
+    directRadioCompatibility: 'NATIVE_COMPATIBLE',
+    lanCompatibility: 'SUPPORTED',
+    architecturalSupport: true,
+    nativeCodePresentA: true,
+    nativeCodePresentB: true,
+    runtimeVerifiedA: true,
+    runtimeVerifiedB: true,
+    physicalInteroperabilityStatus: 'BLOCKED',
+    primaryTransport: 'MultipeerConnectivity / AWDL',
+    securityProtocol: 'ECDH_P256_AES256_GCM',
+    failureOrBlockerReason: 'Requires two physical Apple Silicon / Intel Macs in direct wireless range.',
+  },
+  {
+    pairId: 'INTEROP-MAC-MAC-LAN',
+    platformA: 'macOS',
+    platformB: 'macOS',
+    mode: 'wifi',
+    directRadioCompatibility: 'NATIVE_COMPATIBLE',
+    lanCompatibility: 'SUPPORTED',
+    architecturalSupport: true,
+    nativeCodePresentA: true,
+    nativeCodePresentB: true,
+    runtimeVerifiedA: true,
+    runtimeVerifiedB: true,
+    physicalInteroperabilityStatus: 'BLOCKED',
+    primaryTransport: 'Native Tokio TCP (Port 53317)',
+    securityProtocol: 'ECDH_P256_AES256_GCM',
+    failureOrBlockerReason: 'Requires secondary Mac connected to local subnet.',
+  },
+
+  // 2. macOS <-> Windows
+  {
+    pairId: 'INTEROP-MAC-WIN-DIRECT',
+    platformA: 'macOS',
+    platformB: 'Windows',
+    mode: 'direct',
+    directRadioCompatibility: 'RADIO_INCOMPATIBLE',
+    lanCompatibility: 'SUPPORTED',
+    architecturalSupport: true,
+    nativeCodePresentA: true,
+    nativeCodePresentB: true,
+    runtimeVerifiedA: true,
+    runtimeVerifiedB: false,
+    physicalInteroperabilityStatus: 'NOT_AVAILABLE',
+    primaryTransport: 'Direct Radio Incompatible (AWDL vs Wi-Fi Direct)',
+    securityProtocol: 'ECDH_P256_AES256_GCM',
+    failureOrBlockerReason: 'Apple AWDL cannot establish peer-to-peer link directly with Windows Wi-Fi Direct. Local Network mode must be used.',
+  },
+  {
+    pairId: 'INTEROP-MAC-WIN-LAN',
+    platformA: 'macOS',
+    platformB: 'Windows',
+    mode: 'wifi',
+    directRadioCompatibility: 'RADIO_INCOMPATIBLE',
+    lanCompatibility: 'SUPPORTED',
+    architecturalSupport: true,
+    nativeCodePresentA: true,
+    nativeCodePresentB: true,
+    runtimeVerifiedA: true,
+    runtimeVerifiedB: false,
+    physicalInteroperabilityStatus: 'BLOCKED',
+    primaryTransport: 'Native TCP / UDP Multicast Discovery',
+    securityProtocol: 'ECDH_P256_AES256_GCM',
+    failureOrBlockerReason: 'Requires physical Windows 10/11 machine on shared local Wi-Fi router.',
+  },
+
+  // 3. macOS <-> Android
+  {
+    pairId: 'INTEROP-MAC-AND-DIRECT',
+    platformA: 'macOS',
+    platformB: 'Android',
+    mode: 'direct',
+    directRadioCompatibility: 'RADIO_INCOMPATIBLE',
+    lanCompatibility: 'SUPPORTED',
+    architecturalSupport: true,
+    nativeCodePresentA: true,
+    nativeCodePresentB: true,
+    runtimeVerifiedA: true,
+    runtimeVerifiedB: false,
+    physicalInteroperabilityStatus: 'NOT_AVAILABLE',
+    primaryTransport: 'Direct Radio Incompatible (AWDL vs Wi-Fi P2P)',
+    securityProtocol: 'ECDH_P256_AES256_GCM',
+    failureOrBlockerReason: 'Apple AWDL is incompatible with Android Wi-Fi P2P Group Owner protocol. Local Network mode required.',
+  },
+  {
+    pairId: 'INTEROP-MAC-AND-LAN',
+    platformA: 'macOS',
+    platformB: 'Android',
+    mode: 'wifi',
+    directRadioCompatibility: 'RADIO_INCOMPATIBLE',
+    lanCompatibility: 'SUPPORTED',
+    architecturalSupport: true,
+    nativeCodePresentA: true,
+    nativeCodePresentB: false,
+    runtimeVerifiedA: true,
+    runtimeVerifiedB: false,
+    physicalInteroperabilityStatus: 'BLOCKED',
+    primaryTransport: 'TCP Socket / Android NSD Discovery',
+    securityProtocol: 'ECDH_P256_AES256_GCM',
+    failureOrBlockerReason: 'Requires physical Android device on shared Wi-Fi.',
+  },
+
+  // 4. macOS <-> iOS
+  {
+    pairId: 'INTEROP-MAC-IOS-DIRECT',
+    platformA: 'macOS',
+    platformB: 'iOS',
+    mode: 'direct',
+    directRadioCompatibility: 'NATIVE_COMPATIBLE',
+    lanCompatibility: 'SUPPORTED',
+    architecturalSupport: true,
+    nativeCodePresentA: true,
+    nativeCodePresentB: true,
+    runtimeVerifiedA: true,
+    runtimeVerifiedB: false,
+    physicalInteroperabilityStatus: 'BLOCKED',
+    primaryTransport: 'MultipeerConnectivity / AWDL',
+    securityProtocol: 'ECDH_P256_AES256_GCM',
+    failureOrBlockerReason: 'Native Apple Multipeer frameworks compatible; physical iPhone required for end-to-end verification.',
+  },
+  {
+    pairId: 'INTEROP-MAC-IOS-LAN',
+    platformA: 'macOS',
+    platformB: 'iOS',
+    mode: 'wifi',
+    directRadioCompatibility: 'NATIVE_COMPATIBLE',
+    lanCompatibility: 'SUPPORTED',
+    architecturalSupport: true,
+    nativeCodePresentA: true,
+    nativeCodePresentB: false,
+    runtimeVerifiedA: true,
+    runtimeVerifiedB: false,
+    physicalInteroperabilityStatus: 'BLOCKED',
+    primaryTransport: 'Native TCP / Bonjour mDNS',
+    securityProtocol: 'ECDH_P256_AES256_GCM',
+    failureOrBlockerReason: 'Requires physical iPhone on local network.',
+  },
+
+  // 5. Windows <-> Windows
+  {
+    pairId: 'INTEROP-WIN-WIN-DIRECT',
+    platformA: 'Windows',
+    platformB: 'Windows',
+    mode: 'direct',
+    directRadioCompatibility: 'STANDARDIZED_WIFI_DIRECT',
+    lanCompatibility: 'SUPPORTED',
+    architecturalSupport: true,
+    nativeCodePresentA: true,
+    nativeCodePresentB: true,
+    runtimeVerifiedA: false,
+    runtimeVerifiedB: false,
+    physicalInteroperabilityStatus: 'BLOCKED',
+    primaryTransport: 'WinRT Wi-Fi Direct / StreamSocket',
+    securityProtocol: 'ECDH_P256_AES256_GCM',
+    failureOrBlockerReason: 'Requires two physical Windows 10/11 machines with Wi-Fi Direct NICs.',
+  },
+  {
+    pairId: 'INTEROP-WIN-WIN-LAN',
+    platformA: 'Windows',
+    platformB: 'Windows',
+    mode: 'wifi',
+    directRadioCompatibility: 'STANDARDIZED_WIFI_DIRECT',
+    lanCompatibility: 'SUPPORTED',
+    architecturalSupport: true,
+    nativeCodePresentA: true,
+    nativeCodePresentB: true,
+    runtimeVerifiedA: false,
+    runtimeVerifiedB: false,
+    physicalInteroperabilityStatus: 'BLOCKED',
+    primaryTransport: 'Tokio TCP / UDP Discovery',
+    securityProtocol: 'ECDH_P256_AES256_GCM',
+    failureOrBlockerReason: 'Requires Windows hardware testbed.',
+  },
+
+  // 6. Windows <-> Android
+  {
+    pairId: 'INTEROP-WIN-AND-DIRECT',
+    platformA: 'Windows',
+    platformB: 'Android',
+    mode: 'direct',
+    directRadioCompatibility: 'STANDARDIZED_WIFI_DIRECT',
+    lanCompatibility: 'SUPPORTED',
+    architecturalSupport: true,
+    nativeCodePresentA: true,
+    nativeCodePresentB: true,
+    runtimeVerifiedA: false,
+    runtimeVerifiedB: false,
+    physicalInteroperabilityStatus: 'BLOCKED',
+    primaryTransport: 'Wi-Fi Direct (Standardized WPS / P2P-GO)',
+    securityProtocol: 'ECDH_P256_AES256_GCM',
+    failureOrBlockerReason: 'Both implement Wi-Fi Direct standards; multi-vendor negotiation pending physical hardware.',
+  },
+  {
+    pairId: 'INTEROP-WIN-AND-LAN',
+    platformA: 'Windows',
+    platformB: 'Android',
+    mode: 'wifi',
+    directRadioCompatibility: 'STANDARDIZED_WIFI_DIRECT',
+    lanCompatibility: 'SUPPORTED',
+    architecturalSupport: true,
+    nativeCodePresentA: true,
+    nativeCodePresentB: false,
+    runtimeVerifiedA: false,
+    runtimeVerifiedB: false,
+    physicalInteroperabilityStatus: 'BLOCKED',
+    primaryTransport: 'Standard TCP Socket over LAN',
+    securityProtocol: 'ECDH_P256_AES256_GCM',
+    failureOrBlockerReason: 'Requires Windows + Android test pair.',
+  },
+
+  // 7. Windows <-> iOS
+  {
+    pairId: 'INTEROP-WIN-IOS-DIRECT',
+    platformA: 'Windows',
+    platformB: 'iOS',
+    mode: 'direct',
+    directRadioCompatibility: 'RADIO_INCOMPATIBLE',
+    lanCompatibility: 'SUPPORTED',
+    architecturalSupport: true,
+    nativeCodePresentA: true,
+    nativeCodePresentB: true,
+    runtimeVerifiedA: false,
+    runtimeVerifiedB: false,
+    physicalInteroperabilityStatus: 'NOT_AVAILABLE',
+    primaryTransport: 'Direct Radio Incompatible (Wi-Fi Direct vs AWDL)',
+    securityProtocol: 'ECDH_P256_AES256_GCM',
+    failureOrBlockerReason: 'Apple Multipeer cannot negotiate directly with Windows Wi-Fi Direct. Local Network mode required.',
+  },
+  {
+    pairId: 'INTEROP-WIN-IOS-LAN',
+    platformA: 'Windows',
+    platformB: 'iOS',
+    mode: 'wifi',
+    directRadioCompatibility: 'RADIO_INCOMPATIBLE',
+    lanCompatibility: 'SUPPORTED',
+    architecturalSupport: true,
+    nativeCodePresentA: true,
+    nativeCodePresentB: false,
+    runtimeVerifiedA: false,
+    runtimeVerifiedB: false,
+    physicalInteroperabilityStatus: 'BLOCKED',
+    primaryTransport: 'Standard TCP Socket over LAN',
+    securityProtocol: 'ECDH_P256_AES256_GCM',
+    failureOrBlockerReason: 'Requires Windows + iPhone test pair.',
+  },
+
+  // 8. Android <-> Android
+  {
+    pairId: 'INTEROP-AND-AND-DIRECT',
+    platformA: 'Android',
+    platformB: 'Android',
+    mode: 'direct',
+    directRadioCompatibility: 'STANDARDIZED_WIFI_DIRECT',
+    lanCompatibility: 'SUPPORTED',
+    architecturalSupport: true,
+    nativeCodePresentA: true,
+    nativeCodePresentB: true,
+    runtimeVerifiedA: false,
+    runtimeVerifiedB: false,
+    physicalInteroperabilityStatus: 'BLOCKED',
+    primaryTransport: 'Kotlin WifiP2pManager (P2P-GO / Client)',
+    securityProtocol: 'ECDH_P256_AES256_GCM',
+    failureOrBlockerReason: 'Requires two physical Android 12+ devices.',
+  },
+  {
+    pairId: 'INTEROP-AND-AND-LAN',
+    platformA: 'Android',
+    platformB: 'Android',
+    mode: 'wifi',
+    directRadioCompatibility: 'STANDARDIZED_WIFI_DIRECT',
+    lanCompatibility: 'SUPPORTED',
+    architecturalSupport: true,
+    nativeCodePresentA: false,
+    nativeCodePresentB: false,
+    runtimeVerifiedA: false,
+    runtimeVerifiedB: false,
+    physicalInteroperabilityStatus: 'BLOCKED',
+    primaryTransport: 'Standard TCP / NSD',
+    securityProtocol: 'ECDH_P256_AES256_GCM',
+    failureOrBlockerReason: 'Android LAN mode is architectural only.',
+  },
+
+  // 9. Android <-> iOS
+  {
+    pairId: 'INTEROP-AND-IOS-DIRECT',
+    platformA: 'Android',
+    platformB: 'iOS',
+    mode: 'direct',
+    directRadioCompatibility: 'RADIO_INCOMPATIBLE',
+    lanCompatibility: 'SUPPORTED',
+    architecturalSupport: true,
+    nativeCodePresentA: true,
+    nativeCodePresentB: true,
+    runtimeVerifiedA: false,
+    runtimeVerifiedB: false,
+    physicalInteroperabilityStatus: 'NOT_AVAILABLE',
+    primaryTransport: 'Direct Radio Incompatible (Wi-Fi P2P vs Multipeer)',
+    securityProtocol: 'ECDH_P256_AES256_GCM',
+    failureOrBlockerReason: 'Android Wi-Fi P2P and Apple Multipeer are incompatible off-grid. Local Network mode required.',
+  },
+  {
+    pairId: 'INTEROP-AND-IOS-LAN',
+    platformA: 'Android',
+    platformB: 'iOS',
+    mode: 'wifi',
+    directRadioCompatibility: 'RADIO_INCOMPATIBLE',
+    lanCompatibility: 'SUPPORTED',
+    architecturalSupport: true,
+    nativeCodePresentA: false,
+    nativeCodePresentB: false,
+    runtimeVerifiedA: false,
+    runtimeVerifiedB: false,
+    physicalInteroperabilityStatus: 'BLOCKED',
+    primaryTransport: 'Standard TCP over shared Wi-Fi',
+    securityProtocol: 'ECDH_P256_AES256_GCM',
+    failureOrBlockerReason: 'Mobile LAN modes are architectural only.',
+  },
+
+  // 10. iOS <-> iOS
+  {
+    pairId: 'INTEROP-IOS-IOS-DIRECT',
+    platformA: 'iOS',
+    platformB: 'iOS',
+    mode: 'direct',
+    directRadioCompatibility: 'NATIVE_COMPATIBLE',
+    lanCompatibility: 'SUPPORTED',
+    architecturalSupport: true,
+    nativeCodePresentA: true,
+    nativeCodePresentB: true,
+    runtimeVerifiedA: false,
+    runtimeVerifiedB: false,
+    physicalInteroperabilityStatus: 'BLOCKED',
+    primaryTransport: 'Swift MultipeerConnectivity / AWDL',
+    securityProtocol: 'ECDH_P256_AES256_GCM',
+    failureOrBlockerReason: 'Requires two physical iPhones/iPads.',
+  },
+  {
+    pairId: 'INTEROP-IOS-IOS-LAN',
+    platformA: 'iOS',
+    platformB: 'iOS',
+    mode: 'wifi',
+    directRadioCompatibility: 'NATIVE_COMPATIBLE',
+    lanCompatibility: 'SUPPORTED',
+    architecturalSupport: true,
+    nativeCodePresentA: false,
+    nativeCodePresentB: false,
+    runtimeVerifiedA: false,
+    runtimeVerifiedB: false,
+    physicalInteroperabilityStatus: 'BLOCKED',
+    primaryTransport: 'Standard TCP over shared Wi-Fi',
+    securityProtocol: 'ECDH_P256_AES256_GCM',
+    failureOrBlockerReason: 'iOS LAN mode is architectural only.',
+  },
+];
+
+export class InteroperabilityMatrix {
+  public static getAllEntries(): InteroperabilityMatrixEntry[] {
+    return CROSS_PLATFORM_INTEROPERABILITY_ENTRIES;
+  }
+
+  public static getEntry(platformA: PlatformType, platformB: PlatformType, mode: ConnectionMode): InteroperabilityMatrixEntry | undefined {
+    return CROSS_PLATFORM_INTEROPERABILITY_ENTRIES.find((entry) =>
+      ((entry.platformA === platformA && entry.platformB === platformB) ||
+       (entry.platformA === platformB && entry.platformB === platformA)) &&
+      entry.mode === mode
+    );
+  }
+
+  public static getDirectRadioCompatibility(platformA: PlatformType, platformB: PlatformType): DirectRadioCompatibility {
+    if (platformA === platformB) {
+      if (platformA === 'macOS' || platformA === 'iOS') return 'NATIVE_COMPATIBLE';
+      if (platformA === 'Windows' || platformA === 'Android') return 'STANDARDIZED_WIFI_DIRECT';
+    }
+    if ((platformA === 'macOS' && platformB === 'iOS') || (platformA === 'iOS' && platformB === 'macOS')) {
+      return 'NATIVE_COMPATIBLE';
+    }
+    if ((platformA === 'Windows' && platformB === 'Android') || (platformA === 'Android' && platformB === 'Windows')) {
+      return 'STANDARDIZED_WIFI_DIRECT';
+    }
+    return 'RADIO_INCOMPATIBLE';
+  }
+}
