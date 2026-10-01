@@ -12,13 +12,14 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import {
+  type VersionManifests,
+  parseTagVersion,
+  resolveTagArg,
+  validateVersions,
+} from '../src/core/version/versionValidator';
 
-export interface VersionManifests {
-  packageJson: string;
-  appVersionTs: string;
-  tauriConf: string;
-  cargoToml: string;
-}
+export { parseTagVersion, resolveTagArg, validateVersions, type VersionManifests };
 
 export function readProjectVersions(rootDir: string = process.cwd()): VersionManifests {
   // 1. package.json
@@ -57,52 +58,24 @@ export function readProjectVersions(rootDir: string = process.cwd()): VersionMan
   };
 }
 
-export function validateVersions(
-  versions: VersionManifests,
-  expectedTag?: string
-): { isValid: boolean; targetVersion: string; errors: string[] } {
-  const errors: string[] = [];
-  const targetVersion = versions.packageJson;
-
-  if (versions.appVersionTs !== targetVersion) {
-    errors.push(`src/core/appVersion.ts (${versions.appVersionTs}) != package.json (${targetVersion})`);
-  }
-  if (versions.tauriConf !== targetVersion) {
-    errors.push(`src-tauri/tauri.conf.json (${versions.tauriConf}) != package.json (${targetVersion})`);
-  }
-  if (versions.cargoToml !== targetVersion) {
-    errors.push(`src-tauri/Cargo.toml (${versions.cargoToml}) != package.json (${targetVersion})`);
-  }
-
-  if (expectedTag) {
-    const normalizedTag = expectedTag.replace(/^refs\/tags\//, '').replace(/^v/, '');
-    if (normalizedTag !== targetVersion) {
-      errors.push(`Git tag '${expectedTag}' (normalized '${normalizedTag}') does not match release version '${targetVersion}'`);
-    }
-  }
-
-  return {
-    isValid: errors.length === 0,
-    targetVersion,
-    errors,
-  };
-}
-
 // CLI Execution Entrypoint
-const isMain = process.argv[1] && (process.argv[1].endsWith('validate-version.ts') || process.argv[1].endsWith('validate-version.js'));
+const isMain =
+  process.argv[1] &&
+  (process.argv[1].endsWith('validate-version.ts') || process.argv[1].endsWith('validate-version.js'));
+
 if (isMain) {
   try {
-    const rawTagArg = process.argv[2] || process.env.GITHUB_REF_NAME || (process.env.GITHUB_REF?.startsWith('refs/tags/') ? process.env.GITHUB_REF : undefined);
+    const resolvedTag = resolveTagArg(process.argv[2]);
     const versions = readProjectVersions();
-    const result = validateVersions(versions, rawTagArg);
+    const result = validateVersions(versions, resolvedTag);
 
     console.log(`[Version Validator] Target Version: ${result.targetVersion}`);
     console.log(` - package.json:             ${versions.packageJson}`);
     console.log(` - src/core/appVersion.ts:   ${versions.appVersionTs}`);
     console.log(` - src-tauri/tauri.conf.json:${versions.tauriConf}`);
     console.log(` - src-tauri/Cargo.toml:     ${versions.cargoToml}`);
-    if (rawTagArg) {
-      console.log(` - Git Tag Target:           ${rawTagArg}`);
+    if (resolvedTag) {
+      console.log(` - Git Tag Target:           ${resolvedTag}`);
     }
 
     if (!result.isValid) {

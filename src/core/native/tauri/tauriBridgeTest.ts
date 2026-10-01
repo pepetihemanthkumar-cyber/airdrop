@@ -16375,6 +16375,77 @@ export async function runTauriBridgeTestSuite(): Promise<TauriTestSuiteSummary> 
     }
   });
 
+  // 941 (VER-001). Branch CI detection ignores main branch name as tag
+  await runTest('tauri-ver-001-branch-ci-detection', 'VER-001: Branch CI does not treat main/feature branch names as release tags', async () => {
+    const { resolveTagArg } = await import('../../version/versionValidator');
+    const branchEnv: Record<string, string | undefined> = {
+      GITHUB_REF: 'refs/heads/main',
+      GITHUB_REF_NAME: 'main',
+      GITHUB_REF_TYPE: 'branch',
+    };
+    const resolved = resolveTagArg(undefined, branchEnv);
+    if (resolved !== undefined) {
+      throw new Error(`Expected undefined tag on branch push, got '${resolved}'`);
+    }
+    const devResolved = resolveTagArg(undefined, { GITHUB_REF_NAME: 'feature/transport', GITHUB_REF_TYPE: 'branch' });
+    if (devResolved !== undefined) {
+      throw new Error(`Expected undefined tag on feature branch, got '${devResolved}'`);
+    }
+    const cliBranch = resolveTagArg('refs/heads/main');
+    if (cliBranch !== undefined) {
+      throw new Error(`Expected undefined tag on refs/heads/main CLI arg, got '${cliBranch}'`);
+    }
+  });
+
+  // 942 (VER-002). Prerelease and standard SemVer tag parsing
+  await runTest('tauri-ver-002-semver-prerelease-tags', 'VER-002: SemVer tag parser accepts standard and release candidate tags', async () => {
+    const { parseTagVersion, validateVersions } = await import('../../version/versionValidator');
+    const validTags = ['v0.1.0', 'v0.1.0-rc1', 'v0.1.0-rc2', 'v0.1.0-beta.1', 'refs/tags/v0.1.0-rc1'];
+    const mockManifests = { packageJson: '0.1.0', appVersionTs: '0.1.0', tauriConf: '0.1.0', cargoToml: '0.1.0' };
+
+    for (const tag of validTags) {
+      const parsed = parseTagVersion(tag);
+      if (!parsed.isValidSemver || parsed.baseVersion !== '0.1.0') {
+        throw new Error(`Tag '${tag}' failed to parse with baseVersion '0.1.0'`);
+      }
+      const val = validateVersions(mockManifests, tag);
+      if (!val.isValid) {
+        throw new Error(`Tag '${tag}' unexpectedly failed validateVersions: ${val.errors.join(', ')}`);
+      }
+    }
+  });
+
+  // 943 (VER-003). Rejects version mismatches and malformed tags
+  await runTest('tauri-ver-003-mismatch-and-malformed', 'VER-003: Version validator strictly rejects version mismatches and malformed tags', async () => {
+    const { parseTagVersion, validateVersions } = await import('../../version/versionValidator');
+    const mockManifests = { packageJson: '0.1.0', appVersionTs: '0.1.0', tauriConf: '0.1.0', cargoToml: '0.1.0' };
+
+    // Mismatch: v0.2.0-rc1 against 0.1.0 manifests
+    const mismatchVal = validateVersions(mockManifests, 'v0.2.0-rc1');
+    if (mismatchVal.isValid) {
+      throw new Error('Expected v0.2.0-rc1 to fail validation against 0.1.0 manifests');
+    }
+
+    // Malformed tags
+    const malformed = ['main', 'release', 'v0.1', 'vabc', '0.1', 'random-tag'];
+    for (const badTag of malformed) {
+      const parsed = parseTagVersion(badTag);
+      if (parsed.isValidSemver) {
+        throw new Error(`Expected tag '${badTag}' to be recognized as invalid SemVer`);
+      }
+      const val = validateVersions(mockManifests, badTag);
+      if (val.isValid) {
+        throw new Error(`Expected malformed tag '${badTag}' to fail validateVersions`);
+      }
+    }
+
+    // Missing / empty ref passes manifest check
+    const cleanVal = validateVersions(mockManifests, undefined);
+    if (!cleanVal.isValid) {
+      throw new Error('Expected undefined tag to pass synchronized manifests');
+    }
+  });
+
   return {
     total: tests.length,
     passed: tests.filter((t) => t.passed).length,
